@@ -34,6 +34,29 @@ Click **Try the demo page** to scan a built-in page with deliberate problems.
 
 Set `E2E_ONLINE=1` to also run a live scan of https://example.com in the tests.
 
+## GitHub Pages deployment
+
+The [deployment workflow](.github/workflows/deploy.yml) builds and publishes the
+frontend on pushes to `main`, or manually from the Actions tab. Change the branch
+in the workflow if your default branch is different.
+
+1. Push this project, including `.github/workflows/deploy.yml`, to your repository.
+2. In **Settings > Pages**, set **Source** to **GitHub Actions**.
+3. Open **Actions > Build and deploy to GitHub Pages** and run the workflow.
+4. Once deployment succeeds, open the URL shown by the deployment job.
+
+The workflow sets the asset base path from the Pages configuration and enables
+`VITE_GITHUB_PAGES=true` during the build. Pages builds use hash routes (for example,
+`/repository/#/history`) so refreshing a route does not produce a server-side 404.
+Normal development and server builds retain browser-history routes.
+
+**GitHub Pages hosts only static files.** It cannot run the Express API or
+Playwright scanner. The UI can load on Pages, but new scans will fail because
+`/api/scan` is not available. For a fully working scanner, deploy the whole
+application to a Node.js host with Chromium support using `npm run build` and
+`npm start`. Hosting the API separately requires additional API URL and CORS
+configuration; the Pages workflow does not configure a backend.
+
 ## Configuration (environment variables)
 
 | Variable | Default | Purpose |
